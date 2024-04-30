@@ -30,7 +30,8 @@ app.post('/login', async (req, res) => {
 
 // Endpoint de listagem de usuários (expondo dados sensíveis)
 app.get('/users', async (req, res) => {
-  const users = await User.findAll({ attributes: ['id', 'username', 'password'] });
+  //Dentre os atributos apresentados, estava a senha, o que poderia expor informacoes sigilosas
+  const users = await User.findAll({ attributes: ['id', 'username'] });
   res.json(users);
 });
 
@@ -39,7 +40,8 @@ app.get('/profile', async (req, res) => {
   const { username } = req.query;
   const user = await User.findOne({ where: { username: username ?? null } });
   if (user) {
-    res.json(user);
+    //Ao inves de exibir todas as informacoes, exibe apenas as informacoes selecionadas
+    res.json(user.username);
   } else {
     res.status(404).json({ message: 'User not found' });
   }

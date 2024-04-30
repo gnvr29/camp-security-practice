@@ -34,7 +34,7 @@ module.exports = {
     const saltRounds = 10;
     //Senha criptografada
     const hashedPsswd = await bcrypt.hash(password, saltRounds);
-
+    //Armazena a senha criptografada
     await queryInterface.bulkInsert('users', [{
       username: username,
       password: hashedPsswd,
