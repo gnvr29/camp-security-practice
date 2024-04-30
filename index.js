@@ -1,4 +1,6 @@
 // index.js
+//Importa a biblioteca bcrypt para comparar a senha fornecida com o hash da senha no banco de dados
+const bcrypt = require('bcrypt');
 const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('./models/User');
@@ -11,9 +13,16 @@ app.use(bodyParser.json());
 // Endpoint de login (vulnerável a SQL Injection)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ where: { username, password } });
+  const user = await User.findOne({ where: {username} });
+
   if (user) {
-    res.json({ message: 'Login successful', user });
+    //Compara a senha fornecida com a senha criptografada do usuário
+    const isPsswdValid = await bcrypt.compare(password, user.password);
+    if(isPsswdValid){
+      res.json({ message: 'Login successful', user });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
   } else {
     res.status(401).json({ message: 'Invalid credentials' });
   }

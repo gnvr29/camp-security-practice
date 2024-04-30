@@ -1,5 +1,7 @@
 // migrations/create-user.js
 const { DataTypes } = require('sequelize');
+//Biblioteca utilizada para criptografar a senha
+const bcrypt = require('bcrypt');
 const sequelize = require('../sequelize');
 
 module.exports = {
@@ -28,6 +30,16 @@ module.exports = {
         type: DataTypes.DATE,
       },
     });
+    //Tempo utilizado no processo de hashing
+    const saltRounds = 10;
+    //Senha criptografada
+    const hashedPsswd = await bcrypt.hash(password, saltRounds);
+
+    await queryInterface.bulkInsert('users', [{
+      username: username,
+      password: hashedPassword,
+    }], {});
+
   },
   down: async (queryInterface) => {
     await queryInterface.dropTable('users');
