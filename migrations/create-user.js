@@ -37,7 +37,7 @@ module.exports = {
 
     await queryInterface.bulkInsert('users', [{
       username: username,
-      password: hashedPassword,
+      password: hashedPsswd,
     }], {});
 
   },
